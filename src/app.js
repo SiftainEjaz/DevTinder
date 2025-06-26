@@ -10,18 +10,24 @@ app.listen(3000, ()=>{
 
 
 //Request Handlers
-app.use("/login",(req,res)=>{
-    res.send("LOGIN PAGE");
-})
-app.use("/",(req,res)=>{
-    res.send("Home Page");
+
+app.use('/test',(req,res)=>{
+    res.send("Hello from Server!");
 })
 
-app.use("/test",(req,res)=>{
-    res.send("Hello from the server!");
+
+app.get('/user',(req,res)=>{
+    res.send({"firstname" : "Siftain",
+        "lastname" : "Ejaz"
+    })
 })
 
-app.use("/hello",(req,res)=>{
-    res.send("HELLO HELLO HELLO")
+app.post("/user",(req,res)=>{
+    console.log("Saved data to the database.");
+    res.send("Data successfully!");
+})
+
+app.delete("/user",(req,res)=>{
+    res.send("User deleted successfully.")
 })
 
