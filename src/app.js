@@ -11,23 +11,22 @@ app.listen(3000, ()=>{
 
 //Request Handlers
 
-app.use('/test',(req,res)=>{
-    res.send("Hello from Server!");
-})
-
-
-app.get('/user',(req,res)=>{
+//Params
+app.get('/user/:userId/:name/:password',(req,res)=>{
+    //console.log(JSON.stringify(req.query));
+    console.log(JSON.stringify(req.params));
     res.send({"firstname" : "Siftain",
         "lastname" : "Ejaz"
     })
 })
 
-app.post("/user",(req,res)=>{
-    console.log("Saved data to the database.");
-    res.send("Data successfully!");
-})
+//Query
+// app.get("/user",(req,res)=>{
+//     console.log(JSON.stringify(req.query));
+//     res.send("Query Params fetched!")
+// })
 
-app.delete("/user",(req,res)=>{
-    res.send("User deleted successfully.")
-})
+
+
+
 
