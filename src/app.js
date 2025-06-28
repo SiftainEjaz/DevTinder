@@ -1,13 +1,57 @@
 const express = require("express");
-const auth = require("./middlewares/auth.js");
+//const auth = require("./middlewares/auth.js");
+const connectDB = require("./config/database.js");
+const User =  require('./models/user.js');
 
 //Web Server creation
 const app = express();
 
-//Server is listening to incoming request from users
-app.listen(3000, ()=>{
-    console.log("Server is successfully listening on port 3000");
+const PORT = 3000;
+
+connectDB().
+then(()=>{
+    console.log("Database connection established...");
+    //Server is listening to incoming request from users
+    app.listen(3000, ()=>{
+    console.log(`Server is successfully listening on ${PORT}`);
 });
+}).catch((err)=>{
+    console.log("Connection connot be established");
+});
+
+app.post("/signup", async (req,res) => {
+    const userObject = {
+        firstName : "Virat",
+        lastName : "Kohli",
+        emailId : "virat@gmail.com",
+        password : "Virat1234",
+    }
+
+    //Creating a new instance of the user model
+    const user = new User(userObject);  //Data can be passed directly
+    try{
+        await user.save();
+        res.send("User Added Successfully!");
+    }
+    catch(err)
+    {
+        res.status(400).send("Error in saving user!" + err.message);
+    }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //Request Handlers
@@ -19,18 +63,18 @@ app.listen(3000, ()=>{
 
 //Error Handling Scenario
 
-app.get("/getUserData",(req,res)=>{
-    //Logic for DB Call and get User data
-    throw new Error("DB Exception Found");
-    res.send("USer Data");
-})
+// app.get("/getUserData",(req,res)=>{
+//     //Logic for DB Call and get User data
+//     throw new Error("DB Exception Found");
+//     res.send("USer Data");
+// })
 
-app.use("/",(err,req,res,next)=>{
-    if(err)
-    {
-        res.status(500).send("Error handled via error handler")
-    }
-})
+// app.use("/",(err,req,res,next)=>{
+//     if(err)
+//     {
+//         res.status(500).send("Error handled via error handler")
+//     }
+// })
 
 
 
