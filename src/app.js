@@ -1,4 +1,5 @@
 const express = require("express");
+const auth = require("./middlewares/auth.js");
 
 //Web Server creation
 const app = express();
@@ -11,14 +12,32 @@ app.listen(3000, ()=>{
 
 //Request Handlers
 
-//Params
-app.get('/user/:userId/:name/:password',(req,res)=>{
-    //console.log(JSON.stringify(req.query));
-    console.log(JSON.stringify(req.params));
-    res.send({"firstname" : "Siftain",
-        "lastname" : "Ejaz"
-    })
+app.use("/admin",auth,(req,res)=>{
+    res.send("ALL USER DATA SENT!");
+});
+// app.get('/admin/getAllData',(req,res)=>{
+//     //Logic to check if the request is autorized
+//     res.send("ALL USER DATA SENT!");
+// })
+
+app.get('/admin/deleteUser',(req,res)=>{
+    //Logic to check if the request is autorized
+    res.send("USER DELETED!");
 })
+
+
+
+
+
+
+//Params
+// app.get('/user/:userId/:name/:password',(req,res)=>{
+//     //console.log(JSON.stringify(req.query));
+//     console.log(JSON.stringify(req.params));
+//     res.send({"firstname" : "Siftain",
+//         "lastname" : "Ejaz"
+//     })
+// })
 
 //Query
 // app.get("/user",(req,res)=>{
