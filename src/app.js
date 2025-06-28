@@ -12,20 +12,25 @@ app.listen(3000, ()=>{
 
 //Request Handlers
 
-app.use("/admin",auth,(req,res)=>{
-    res.send("ALL USER DATA SENT!");
-});
-// app.get('/admin/getAllData',(req,res)=>{
-//     //Logic to check if the request is autorized
+// app.use("/admin/getAllData",auth,(req,res)=>{
 //     res.send("ALL USER DATA SENT!");
-// })
+// });
 
-app.get('/admin/deleteUser',(req,res)=>{
-    //Logic to check if the request is autorized
-    res.send("USER DELETED!");
+
+//Error Handling Scenario
+
+app.get("/getUserData",(req,res)=>{
+    //Logic for DB Call and get User data
+    throw new Error("DB Exception Found");
+    res.send("USer Data");
 })
 
-
+app.use("/",(err,req,res,next)=>{
+    if(err)
+    {
+        res.status(500).send("Error handled via error handler")
+    }
+})
 
 
 
