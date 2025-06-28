@@ -5,6 +5,7 @@ const User =  require('./models/user.js');
 
 //Web Server creation
 const app = express();
+app.use(express.json());
 
 const PORT = 3000;
 
@@ -20,23 +21,36 @@ then(()=>{
 });
 
 app.post("/signup", async (req,res) => {
-    const userObject = {
-        firstName : "Virat",
-        lastName : "Kohli",
-        emailId : "virat@gmail.com",
-        password : "Virat1234",
-    }
-
     //Creating a new instance of the user model
-    const user = new User(userObject);  //Data can be passed directly
-    try{
+    //console.log(req.body);
+    const user = new User(req.body);
+    try
+    {
         await user.save();
-        res.send("User Added Successfully!");
+        res.send("User added successfully!");
     }
     catch(err)
     {
-        res.status(400).send("Error in saving user!" + err.message);
+        res.status(400).send("Error in adding user!");
     }
+
+
+
+    // const user = new User({
+    //     firstName : "Virat",
+    //     lastName : "Kohli",
+    //     emailId : "virat@gmail.com",
+    //     password : "Virat1234"
+    // });  
+
+    // try{
+    //     await user.save();
+    //     res.send("User Added Successfully!");
+    // }
+    // catch(err)
+    // {
+    //     res.status(400).send("Error in saving user!" + err.message);
+    // }
 })
 
 
