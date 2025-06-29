@@ -5,10 +5,9 @@ const User =  require('./models/user.js');
 
 //Web Server creation
 const app = express();
-app.use(express.json());
+app.use(express.json());  //Coverts JSON into Javascript Object
 
 const PORT = 3000;
-
 connectDB().
 then(()=>{
     console.log("Database connection established...");
@@ -20,6 +19,7 @@ then(()=>{
     console.log("Connection connot be established");
 });
 
+//signup for new users
 app.post("/signup", async (req,res) => {
     //Creating a new instance of the user model
     //console.log(req.body);
@@ -52,6 +52,60 @@ app.post("/signup", async (req,res) => {
     //     res.status(400).send("Error in saving user!" + err.message);
     // }
 })
+
+//GET all users by same email
+app.get("/user",async (req,res) => {
+    const userEmail = req.body.emailId;
+    try
+    {
+        const user = await User.find({emailId : userEmail});
+        if(user.length === 0)
+        {
+            res.status(404).send("User not found!");
+        }
+        else
+        {
+           res.send(user);
+        }
+    }
+    catch(err){
+        res.status(400).send("Something went wrong!");
+    }
+})
+
+//GET 1st matching user email -> findOne()
+app.get("/userByEmail", async (req,res) => {
+    const userEmail = req.body.emailId;
+    try
+    {
+        const user = await User.findOne({emailId : userEmail});
+        if(!user)
+        {
+            res.status(404).send("User not found!");
+        }
+        else
+        {
+            res.send(user);
+        }
+    }
+    catch(err){
+        res.status(400).send("Something went wrong!");
+    }
+})
+
+
+// FEED API => fetches all users in the DB
+app.get("/feed", async (req,res)=>{
+    try{
+        const users = await User.find({});
+        res.send(users);
+    }
+    catch(err){
+        res.status(400).send("Something went wrong!");
+    }
+})
+
+
 
 
 
