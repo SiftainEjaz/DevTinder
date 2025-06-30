@@ -31,7 +31,8 @@ app.post("/signup", async (req,res) => {
     }
     catch(err)
     {
-        res.status(400).send("Error in adding user!");
+        res.status(400).send(err.message);
+        ;
     }
 
 
@@ -127,7 +128,7 @@ app.patch("/user",async (req,res)=>{
     try{
         const emailId = req.body.emailId;
         const data = req.body;
-        const user = await User.findOneAndUpdate({emailId:emailId},data);
+        const user = await User.findOneAndUpdate({emailId:emailId},data,{runValidators : true});
         if(!user)
         {
             res.status(404).send("User not found!");
@@ -139,7 +140,7 @@ app.patch("/user",async (req,res)=>{
     }
     catch(err)
     {
-        res.status(501).send("Something went wrong!");
+        res.status(501).send(err.message);
     }
 })
 
