@@ -93,7 +93,6 @@ app.get("/userByEmail", async (req,res) => {
     }
 })
 
-
 // FEED API => fetches all users in the DB
 app.get("/feed", async (req,res)=>{
     try{
@@ -104,6 +103,47 @@ app.get("/feed", async (req,res)=>{
         res.status(400).send("Something went wrong!");
     }
 })
+
+//Deleting user by id
+app.delete("/user",async (req,res)=>{
+    try{
+        const userId = req.body.userId;
+        const user = await User.findOneAndDelete({_id : userId});
+        if(!user)
+        {
+            res.status(404).send("User not found!");
+        }
+        else{
+            res.send("User deleted successfully!");
+        }
+    }
+    catch(err){
+        res.status(500).send("Something went wrong!");
+    }
+})
+
+//Updating user by emailid
+app.patch("/user",async (req,res)=>{
+    try{
+        const emailId = req.body.emailId;
+        const data = req.body;
+        const user = await User.findOneAndUpdate({emailId:emailId},data);
+        if(!user)
+        {
+            res.status(404).send("User not found!");
+        }
+        else
+        {
+            res.send("User data updated successfully!");
+        }
+    }
+    catch(err)
+    {
+        res.status(501).send("Something went wrong!");
+    }
+})
+
+
 
 
 
