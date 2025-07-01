@@ -32,9 +32,7 @@ app.post("/signup", async (req,res) => {
     catch(err)
     {
         res.status(400).send(err.message);
-        ;
     }
-
 
 
     // const user = new User({
@@ -124,11 +122,34 @@ app.delete("/user",async (req,res)=>{
 })
 
 //Updating user by emailid
-app.patch("/user",async (req,res)=>{
+app.patch("/user/:userId",async (req,res)=>{
+    const userId = req.params?.userId;
+    const data = req.body;
     try{
-        const emailId = req.body.emailId;
-        const data = req.body;
-        const user = await User.findOneAndUpdate({emailId:emailId},data,{runValidators : true});
+        const ALLOWED_UPDATES = [
+            "photoUrl",
+            "about",
+            "skills",
+            "age",
+            "password"
+        ]
+
+        const isAllowedUpdates = Object.keys(data).every((k)=>{
+            return ALLOWED_UPDATES.includes(k);
+        })
+        if(!isAllowedUpdates)
+        {
+            throw new Error("Failed to update!");
+        }
+        if(data.skills?.length>10)
+        {
+            throw new Error("Skills cannot be more than 10!");
+        }
+        const user = await User.findByIdAndUpdate(
+            {_id:userId},
+             data,
+            {runValidators : true}
+        );
         if(!user)
         {
             res.status(404).send("User not found!");
