@@ -2,6 +2,8 @@ const express = require("express");
 //const auth = require("./middlewares/auth.js");
 const connectDB = require("./config/database.js");
 const User =  require('./models/user.js');
+const {validateSignUpData} = require('./utils/validation.js');
+const bcrypt = require("bcrypt");
 
 //Web Server creation
 const app = express();
@@ -22,16 +24,29 @@ then(()=>{
 //signup for new users
 app.post("/signup", async (req,res) => {
     //Creating a new instance of the user model
-    //console.log(req.body);
-    const user = new User(req.body);
-    try
-    {
+    try{
+
+        //Schema Validation
+        validateSignUpData(req);
+
+        //Password Encryption
+        const {firstName, lastName, emailId, password} = req.body;
+        const passwordHash = await bcrypt.hash(password,10);
+        console.log(passwordHash);
+
+        const user = new User({
+            firstName ,
+            lastName ,
+            emailId ,
+            password : passwordHash
+        });
+    
         await user.save();
         res.send("User added successfully!");
     }
     catch(err)
     {
-        res.status(400).send(err.message);
+        res.status(400).send("ERROR : " +err.message);
     }
 
 
@@ -121,7 +136,7 @@ app.delete("/user",async (req,res)=>{
     }
 })
 
-//Updating user by emailid
+//Updating user by userId
 app.patch("/user/:userId",async (req,res)=>{
     const userId = req.params?.userId;
     const data = req.body;
@@ -145,11 +160,19 @@ app.patch("/user/:userId",async (req,res)=>{
         {
             throw new Error("Skills cannot be more than 10!");
         }
+
+        //If user wants to update password, then encrypt the password and then save it
+        if(data.password)
+        {
+            data.password = await bcrypt.hash(data.password,10);
+        }
+
         const user = await User.findByIdAndUpdate(
             {_id:userId},
-             data,
+            data,
             {runValidators : true}
         );
+
         if(!user)
         {
             res.status(404).send("User not found!");
@@ -165,6 +188,30 @@ app.patch("/user/:userId",async (req,res)=>{
     }
 })
 
+//Login 
+app.post("/login",async (req,res)=>{
+    try
+    {
+        const {emailId,password} = req.body;
+        const user = await User.findOne({emailId : emailId});
+        //console.log(user);
+        if(!user)
+        {
+            throw new Error("Invalid Credentials!");
+        }
+        const isCorrect = await bcrypt.compare(password,user.password);
+        if(!isCorrect)
+        {
+            throw new Error("Invalid Credentials!");
+        }
+        console.log(user);
+        res.send("Login Successful!");
+    }
+    catch(err)
+    {
+        res.status(404).send("ERROR : " +err.message);
+    }
+})
 
 
 
