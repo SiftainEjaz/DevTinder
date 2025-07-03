@@ -44,8 +44,8 @@ const userSchema = new mongoose.Schema({
     },
     gender : {
         type : String,
-        //Validate by default works only on new object creation
-        //To turn it on for PATCH or PUT, add and options as {runValidators : true} in the route handler
+        //Validate function by default works only on new object creation
+        //To turn it on for PATCH or PUT, add  (options) as {runValidators : true} in the route handler
         validate(value){    
            if(!["Male","Female","Others"].includes(value)){
             throw new Error("Invalid Gender! Please enter Male, Female or Other.");
@@ -68,7 +68,9 @@ const userSchema = new mongoose.Schema({
     skills : {
         type : [String]
     }
-},{timestamps : true});
+},
+{timestamps : true}
+);
 
 //const User = mongoose.model("User",userSchema);
 //module.exports = User;

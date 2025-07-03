@@ -1,4 +1,5 @@
 const validator = require("validator");   //Gives access to built in validators provided by this library like isEmail,isStrongPassword,isURL,etc
+
 const validateSignUpData = (req) =>{
     const {firstName, lastName, emailId, password} = req.body;
 
