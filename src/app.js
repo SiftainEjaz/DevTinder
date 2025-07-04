@@ -65,7 +65,7 @@ app.post("/login",async (req,res)=>{
         {
             throw new Error("Invalid Credentials!");
         }
-        const isPasswordCorrect = await bcrypt.compare(password,user.password); //1st parameter- Actual password, 2nd param. - Hashed Pass. in DB
+        const isPasswordCorrect = await user.validatePassword(password); 
         if(!isPasswordCorrect)
         {
             throw new Error("Invalid Credentials!");
@@ -74,7 +74,7 @@ app.post("/login",async (req,res)=>{
         {
 
             //Add the token to cookie and send the response back to the user alongwith the token
-            const token = await jwt.sign({_id : user._id},"Saif$123",{expiresIn : "7d"});
+            const token = await user.getJWT();
             res.cookie("token",token);
             res.send("Login Successful!");
         }
