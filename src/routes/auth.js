@@ -52,8 +52,8 @@ authRouter.post("/login",async (req,res)=>{
         else
         {
             //Add the token to cookie and send the response back to the user alongwith the token
-            const token = await user.getJWT();
-            res.cookie("token",token);
+            const token = await user.getJWT();  //Gets the token
+            res.cookie("token",token);          //cookie sent back to the user
             res.send("Login Successful!");
         }
         
@@ -62,6 +62,12 @@ authRouter.post("/login",async (req,res)=>{
     {
         res.status(400).send("ERROR : " +err.message);
     }
+})
+
+authRouter.post("/logout", async (req,res)=>{
+    res.clearCookie("token");
+    //res.cookie("token",null,{expires: new Date(Date.now())});
+    res.send("User Logged out!!");
 })
 
 
