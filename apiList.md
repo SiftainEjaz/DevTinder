@@ -12,10 +12,10 @@
 
 # connectionRequestRouter
 - POST /request/send/:status/:userId
-status - interested or rejected
+status - interested or ignored
 
-- POST /request/review/accepted/:requestId
-- POST /request/review/rejected/:requestId
+- POST /request/review/:status/:requestId
+status - rejected or accepted
 
 # userRouter
 - GET  /user/connections
