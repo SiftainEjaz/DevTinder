@@ -1,11 +1,9 @@
 const express = require("express");
-//const auth = require("./middlewares/auth.js");
 const connectDB = require("./config/database.js");
 const cookieParser = require("cookie-parser");
 
 //Web Server creation
 const app = express();
-
 
 app.use(express.json());  //Coverts JSON into Javascript Object for all route handlers coz. of app.use()
 app.use(cookieParser());

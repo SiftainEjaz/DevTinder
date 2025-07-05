@@ -1,7 +1,7 @@
 # DEVTINDER APIs
 
 # authRouter
-- POST /signup
+- POST /signup 
 - POST /login
 - POST /logout
 

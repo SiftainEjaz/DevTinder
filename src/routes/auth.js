@@ -6,62 +6,64 @@ const User = require("../models/user.js");
 
 
 //signup for new users
-authRouter.post("/signup", async (req,res) => {
-    //Creating a new instance of the user model
+authRouter.post("/signup", async (req,res)=> {
     try
     {
-        //Schema Validation
+        //Step-1:- Validate incoming data from user if it is valid or not
         validateSignUpData(req);
+        //Mandatory -> firstName,lastName,emailId,password
+        //Optional -> gender,age,skills,photoUrl,about
+        const {firstName,lastName,emailId,password,age,skills} = req.body;
 
-        //Password Encryption
-        const {firstName, lastName, emailId, password} = req.body;  //Request Object Destructuring
-        const passwordHash = await bcrypt.hash(password,10);    //10 -> Salt rounds
-
-        const user = new User({
-            firstName ,
-            lastName ,
-            emailId ,
-            password : passwordHash
-        });
-    
+        //Step-2:- Encrypt password
+        const hashedPassword = await bcrypt.hash(password,10);
+        //Step-3:- Store data in the DB
+        const user = new User ({
+            firstName,
+            lastName,
+            emailId,
+            password : hashedPassword,
+            age,
+            skills
+        })
+        
         await user.save();
         res.send("User added successfully!");
+
     }
     catch(err)
     {
         res.status(400).send("ERROR : " +err.message);
-    }  
+    }
 })
 
 //Login for existing user
 authRouter.post("/login",async (req,res)=>{
+    //User will enter emailId and password
     try
     {
         const {emailId,password} = req.body;
         const user = await User.findOne({emailId : emailId});
-
         if(!user)
         {
-            throw new Error("Invalid Credentials!");
+            throw new Error("Invalid credentials!");
         }
-        const isPasswordCorrect = await user.validatePassword(password); 
-        if(!isPasswordCorrect)
+        const isPasswordValid = await user.validatePassword(password);
+        if(!isPasswordValid)
         {
-            throw new Error("Invalid Credentials!");
+            throw new Error("Invalid credentials!");
         }
-        else
-        {
-            //Add the token to cookie and send the response back to the user alongwith the token
-            const token = await user.getJWT();  //Gets the token
-            res.cookie("token",token);          //cookie sent back to the user
-            res.send("Login Successful!");
-        }
-        
+
+        //If both are valid, then create a token, attach it to cookie and send in response
+        const token = await user.getJWT();
+        res.cookie("token",token);
+        res.send("Login successful!");
     }
     catch(err)
     {
         res.status(400).send("ERROR : " +err.message);
     }
+    
 })
 
 authRouter.post("/logout", async (req,res)=>{
