@@ -8,13 +8,15 @@ const app = express();
 app.use(express.json());  //Coverts JSON into Javascript Object for all route handlers coz. of app.use()
 app.use(cookieParser());
 
-const PORT = 3000;
+require("dotenv").config();
+
+//const PORT = 3000;
 connectDB().
 then(()=>{
     console.log("Database connection established...");
     //Server is listening to incoming request from users
-    app.listen(PORT, ()=>{
-    console.log(`Server is successfully listening on ${PORT}`);
+    app.listen(process.env.PORT, ()=>{
+    console.log(`Server is successfully listening on ${process.env.PORT}`);
 });
 }).catch((err)=>{
     console.log("Connection connot be established");

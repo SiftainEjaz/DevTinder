@@ -40,6 +40,7 @@ authRouter.post("/signup", async (req,res)=> {
 //Login for existing user
 authRouter.post("/login",async (req,res)=>{
     //User will enter emailId and password
+    
     try
     {
         const {emailId,password} = req.body;

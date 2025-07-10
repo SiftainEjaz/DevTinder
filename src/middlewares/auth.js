@@ -9,11 +9,11 @@ const userAuth = async (req,res,next) => {
         const {token} = req.cookies;
         if(!token)
         {
-            throw new Error("Invalid Token!!!");
+            throw new Error("Please Login!!");
         }
 
         //Validate Token
-        const decodedObj = await jwt.verify(token,"Saif$123");
+        const decodedObj = await jwt.verify(token,process.env.JWT_SECRET);
 
         //Find the user
         const {_id} = decodedObj;
