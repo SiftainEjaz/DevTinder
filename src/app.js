@@ -32,6 +32,10 @@ app.use("/",profileRouter);
 app.use("/",requestRouter);
 app.use("/",userRouter);
 
+app.get("/health",(req,res)=>{
+    res.send("Backend is live and running!!");
+})
+
 
 
 
