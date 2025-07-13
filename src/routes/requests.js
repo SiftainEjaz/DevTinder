@@ -3,6 +3,7 @@ const requestRouter  = express.Router();
 const {userAuth} = require("../middlewares/auth.js");
 const ConnectionRequest = require("../models/connectionRequest.js");
 const User = require("../models/user.js");
+const sendEmail = require("../utils/sendEmail.js");
 
 //Sending Connection Request
 requestRouter.post("/request/send/:status/:userId" , userAuth , async (req,res) => {
@@ -46,6 +47,11 @@ requestRouter.post("/request/send/:status/:userId" , userAuth , async (req,res) 
         })
 
         const data = await connectionRequest.save();
+
+        const emailResponse = await sendEmail.run("New Connection Request received",`${loggedInUser.firstName} is interested in you!`);
+        console.log(emailResponse);
+
+
         res.json({
             message: `${loggedInUser.firstName} has set STATUS : ${status} for ${toUser.firstName}`,
             data

@@ -32,8 +32,10 @@ app.use("/",profileRouter);
 app.use("/",requestRouter);
 app.use("/",userRouter);
 
-app.get("/health",(req,res)=>{
-    res.send("Backend is live and running!!");
+app.get("/",(req,res)=>{
+    res.send(`<h1>Welcome to Devtinder</h1>
+    <p>This is the backend server for Devtinder – a developer matchmaking platform.</p>
+    <p>Hosted securely on Render with MongoDB Atlas integration.</p>`);
 })
 
 
